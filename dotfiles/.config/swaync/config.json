@@ -1,0 +1,41 @@
+{
+  "positionX": "right",
+  "positionY": "top",
+  "control-center-margin-top": 48,
+  "control-center-margin-bottom": 10,
+  "control-center-margin-right": 10,
+  "control-center-margin-left": 10,
+  "notification-window-width": 390,
+  "control-center-width": 390,
+  "fit-to-screen": true,
+  "keyboard-shortcuts": true,
+  "image-visibility": "when-available",
+  "transition-time": 180,
+  "hide-on-clear": false,
+  "hide-on-action": true,
+  "widgets": [
+    "title",
+    "mpris",
+    "volume",
+    "dnd",
+    "notifications"
+  ],
+  "widget-config": {
+    "title": {
+      "text": "@HOSTNAME@  //  @USERNAME@",
+      "clear-all-button": true,
+      "button-text": "CLEAR"
+    },
+    "mpris": {
+      "image-size": 72,
+      "image-radius": 14
+    },
+    "volume": {
+      "label": "VOLUME"
+    },
+    "dnd": {
+      "text": "DO NOT DISTURB"
+    },
+    "notifications": {}
+  }
+}

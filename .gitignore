@@ -1,0 +1,25 @@
+# Backups
+*.bak
+*.backup
+*.old
+*~
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Generated/local state
+.cache/
+.chie-shell-backups/
+
+# Editors
+.vscode/
+.idea/
+
+# OS junk
+.DS_Store
+Thumbs.db

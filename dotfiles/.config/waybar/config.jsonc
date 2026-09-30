@@ -1,0 +1,86 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 40,
+  "spacing": 8,
+
+  "modules-left": [
+    "custom/chie",
+    "hyprland/workspaces"
+  ],
+
+  "modules-center": [
+    "image#album-art",
+    "custom/media"
+  ],
+
+  "modules-right": [
+    "hyprland/language",
+    "pulseaudio",
+    "network",
+    "custom/notifications",
+    "tray",
+    "clock"
+  ],
+
+  "custom/chie": {
+    "format": "☻",
+    "tooltip": false,
+    "on-click": "rofi -show drun"
+  },
+
+  "image#album-art": {
+    "exec": "~/.config/waybar/media-art.sh",
+    "size": 28,
+    "interval": 2,
+    "tooltip": false,
+    "on-click": "~/.config/hypr/scripts/media-menu.sh"
+  },
+
+  "custom/media": {
+    "exec": "~/.config/waybar/media-status.sh",
+    "interval": 1,
+    "tooltip": false,
+    "on-click": "~/.config/hypr/scripts/media-menu.sh"
+  },
+
+  "custom/notifications": {
+    "format": "NOTI",
+    "tooltip": false,
+    "on-click": "swaync-client -t"
+  },
+
+  "hyprland/workspaces": {
+    "disable-scroll": true,
+    "all-outputs": true,
+    "format": "{name}"
+  },
+
+  "hyprland/language": {
+    "format": "KB {}",
+    "format-en": "KB US",
+    "format-fr": "KB FR",
+    "format-ru": "KB RU"
+  },
+
+  "pulseaudio": {
+    "format": "VOL {volume}%",
+    "format-muted": "MUTE",
+    "on-click": "pavucontrol"
+  },
+
+  "network": {
+    "format-wifi": "NET {signalStrength}%",
+    "format-ethernet": "ETH",
+    "format-disconnected": "OFF"
+  },
+
+  "clock": {
+    "format": "{:%H:%M}",
+    "format-alt": "{:%A %d %B}"
+  },
+
+  "tray": {
+    "spacing": 8
+  }
+}

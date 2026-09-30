@@ -1,0 +1,173 @@
+* {
+    bg:        rgba(18, 22, 15, 0.92);
+    glass:     rgba(255, 255, 255, 0.055);
+
+    green:     #a8d84e;
+    yellow:    #eacf52;
+    olive:     #6b8f2a;
+
+    text:      #dde7c7;
+    muted:     #899475;
+
+    background-color: transparent;
+    text-color: @text;
+}
+
+window {
+    width: 700px;
+
+    transparency: "real";
+    background-color: @bg;
+
+    border: 2px;
+    border-color: rgba(234, 207, 82, 0.32);
+
+    border-radius: 22px;
+    padding: 18px;
+}
+
+mainbox {
+    spacing: 14px;
+    background-color: transparent;
+
+    children: [
+        box-profile,
+        inputbar,
+        listview
+    ];
+}
+
+box-profile {
+    orientation: horizontal;
+    spacing: 20px;
+
+    padding: 16px;
+
+    background-color: rgba(168, 216, 78, 0.08);
+
+    border: 1px;
+    border-color: rgba(168, 216, 78, 0.28);
+
+    border-radius: 18px;
+
+    children: [
+        icon-avatar,
+        box-profile-text
+    ];
+}
+
+icon-avatar {
+    filename: "@HOME@/.config/chie-shell/assets/profile/avatar-rounded.png";
+
+    size: 125px;
+    squared: true;
+}
+
+box-profile-text {
+    orientation: vertical;
+    spacing: 5px;
+
+    background-color: transparent;
+
+    vertical-align: 0.5;
+
+    children: [
+        textbox-host,
+        textbox-user
+    ];
+}
+
+textbox-host {
+    str: "@HOSTNAME@";
+
+    font: "@UI_FONT_BOLD@ 21";
+    text-color: @yellow;
+
+    background-color: transparent;
+
+    vertical-align: 0.5;
+}
+
+textbox-user {
+    str: "@USERNAME@";
+
+    font: "@UI_FONT@ 13";
+    text-color: @muted;
+
+    background-color: transparent;
+
+    vertical-align: 0.5;
+}
+
+inputbar {
+    padding: 13px;
+
+    background-color: @glass;
+
+    border: 1px;
+    border-color: rgba(168, 216, 78, 0.28);
+
+    border-radius: 13px;
+
+    spacing: 10px;
+
+    children: [
+        prompt,
+        entry
+    ];
+}
+
+prompt {
+    text-color: @yellow;
+}
+
+entry {
+    placeholder: "Search applications...";
+    placeholder-color: @muted;
+
+    text-color: @text;
+}
+
+listview {
+    lines: 7;
+    columns: 1;
+
+    spacing: 6px;
+
+    background-color: transparent;
+
+    scrollbar: false;
+}
+
+element {
+    padding: 11px 13px;
+
+    background-color: transparent;
+
+    border-radius: 11px;
+
+    spacing: 10px;
+}
+
+element selected {
+    background-color: rgba(168, 216, 78, 0.16);
+
+    border: 1px;
+    border-color: rgba(234, 207, 82, 0.30);
+}
+
+element-icon {
+    size: 32px;
+}
+
+element-text {
+    font: "@UI_FONT@ 12";
+
+    text-color: @text;
+
+    vertical-align: 0.5;
+}
+
+element selected element-text {
+    text-color: @yellow;
+}

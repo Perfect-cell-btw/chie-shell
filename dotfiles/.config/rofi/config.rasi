@@ -1,0 +1,18 @@
+configuration {
+    modi: "drun,run";
+    show-icons: true;
+    display-drun: "Apps";
+    drun-display-format: "{name}";
+    font: "@UI_FONT@ 12";
+    location: 0;
+    width: 42;
+    lines: 8;
+    columns: 1;
+    fixed-num-lines: true;
+    sidebar-mode: false;
+    matching: "fuzzy";
+    sort: true;
+    icon-theme: "Papirus-Dark";
+}
+
+@theme "themes/chie.rasi"

@@ -15,7 +15,7 @@ HISTSIZE=10000
 SAVEHIST=10000
 
 autoload -Uz compinit
-compinit
+compinit -C
 
 CHIE_GREEN='%F{148}'
 CHIE_YELLOW='%F{220}'
@@ -54,7 +54,16 @@ if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.z
     source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-# Chie Shell startup
+# Chie Shell startup: show Fastfetch once per Hyprland session.
 if [[ -o interactive ]]; then
-    fastfetch
+    _chie_runtime="${XDG_RUNTIME_DIR:-$HOME/.cache}"
+    _chie_session="${HYPRLAND_INSTANCE_SIGNATURE:-default}"
+    _chie_fastfetch_marker="$_chie_runtime/chie-fastfetch-$_chie_session"
+
+    if [[ ! -e "$_chie_fastfetch_marker" ]]; then
+        : >| "$_chie_fastfetch_marker" 2>/dev/null
+        fastfetch
+    fi
+
+    unset _chie_runtime _chie_session _chie_fastfetch_marker
 fi

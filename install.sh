@@ -282,6 +282,12 @@ BACKUP=""
 INSTALL_STARTED=false
 INSTALL_COMMITTED=false
 CURSOR_NAME="Chie-Cursor"
+CURSOR_ITEMS=(
+    ".local/share/icons/$CURSOR_NAME"
+    ".icons/$CURSOR_NAME"
+    ".local/share/icons/default/index.theme"
+    ".icons/default/index.theme"
+)
 
 on_exit() {
     status=$?
@@ -403,13 +409,6 @@ for name in .zshrc .gtkrc-2.0; do
         mv "$target" "$BACKUP/$name"
     fi
 done
-
-CURSOR_ITEMS=(
-    ".local/share/icons/$CURSOR_NAME"
-    ".icons/$CURSOR_NAME"
-    ".local/share/icons/default/index.theme"
-    ".icons/default/index.theme"
-)
 
 for item in "${CURSOR_ITEMS[@]}"; do
     target="$HOME/$item"

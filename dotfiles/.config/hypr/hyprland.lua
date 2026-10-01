@@ -59,7 +59,7 @@ hl.config({
     },
 
     animations = {
-        enabled = false,
+        enabled = true,
     },
 
     decoration = {
@@ -85,6 +85,34 @@ hl.config({
         disable_splash_rendering = true,
     },
 })
+
+-- Fast, lightweight animation preset.
+-- Higher speed values keep the desktop responsive while preserving motion.
+hl.curve("chieFast", {
+    type = "bezier",
+    points = {
+        { 0.20, 0.90 },
+        { 0.20, 1.00 },
+    },
+})
+
+local function chieAnim(leaf, speed, style)
+    hl.animation({
+        leaf = leaf,
+        enabled = true,
+        speed = speed,
+        bezier = "chieFast",
+        style = style,
+    })
+end
+
+chieAnim("global", 9)
+chieAnim("windows", 9)
+chieAnim("windowsIn", 8, "popin 92%")
+chieAnim("windowsOut", 10, "popin 92%")
+chieAnim("fade", 10)
+chieAnim("layers", 9, "fade")
+chieAnim("workspaces", 9, "slide")
 
 -- ---------------------------------------------------------
 -- Programs

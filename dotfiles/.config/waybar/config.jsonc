@@ -39,7 +39,8 @@
 
   "custom/media": {
     "exec": "~/.config/waybar/media-status.sh",
-    "interval": 1,
+    "restart-interval": 2,
+    "exec-on-event": false,
     "tooltip": false,
     "on-click": "~/.config/hypr/scripts/media-menu.sh"
   },
@@ -57,7 +58,7 @@
   },
 
   "hyprland/language": {
-    "format": "KB {}",
+    "format": "{}",
     "format-en": "KB US",
     "format-fr": "KB FR",
     "format-ru": "KB RU"

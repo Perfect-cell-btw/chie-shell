@@ -1,25 +1,41 @@
 #!/usr/bin/env bash
+set -u
 
-status="$(playerctl status 2>/dev/null)"
+render_line() {
+    local status="${1:-}"
+    local artist="${2:-}"
+    local title="${3:-}"
+    local icon
 
-if [ -z "$status" ]; then
-    echo "♪"
-    exit 0
-fi
+    case "$status" in
+        Playing) icon="▶" ;;
+        Paused)  icon="Ⅱ" ;;
+        *)       icon="♪" ;;
+    esac
 
-artist="$(playerctl metadata artist 2>/dev/null)"
-title="$(playerctl metadata title 2>/dev/null)"
+    if [[ -n "$artist" && -n "$title" ]]; then
+        printf '%s %s — %s\n' "$icon" "$artist" "$title"
+    elif [[ -n "$title" ]]; then
+        printf '%s %s\n' "$icon" "$title"
+    else
+        printf '%s Media\n' "$icon"
+    fi
+}
 
-if [ "$status" = "Playing" ]; then
-    icon="▶"
-else
-    icon="Ⅱ"
-fi
+while true; do
+    emitted=false
 
-if [ -n "$artist" ] && [ -n "$title" ]; then
-    echo "$icon $artist — $title"
-elif [ -n "$title" ]; then
-    echo "$icon $title"
-else
-    echo "$icon Media"
-fi
+    while IFS='|' read -r status artist title; do
+        render_line "$status" "$artist" "$title"
+        emitted=true
+    done < <(
+        playerctl --follow metadata \
+            --format '{{status}}|{{artist}}|{{title}}' 2>/dev/null
+    )
+
+    if [[ "$emitted" == false ]]; then
+        printf '♪\n'
+    fi
+
+    sleep 2
+done

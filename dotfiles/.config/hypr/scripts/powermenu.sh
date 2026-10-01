@@ -8,7 +8,11 @@ case "$choice" in
         hyprlock
         ;;
     "LOG OUT")
-        hyprctl dispatch 'hl.dsp.exit()'
+        if command -v hyprshutdown >/dev/null 2>&1; then
+            hyprshutdown -t "Logging out..."
+        else
+            hyprctl dispatch exit
+        fi
         ;;
     "REBOOT")
         systemctl reboot

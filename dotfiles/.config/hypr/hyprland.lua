@@ -1,5 +1,5 @@
 -- =========================================================
--- Chie Shell v0.1 - Clean Bootstrap
+-- Chie Shell v0.2 - optimized
 -- Hyprland 0.56+
 -- =========================================================
 
@@ -13,6 +13,11 @@ hl.monitor({
     position = "auto",
     scale = 1,
 })
+
+-- Chie-Cursor is an XCursor theme. Hyprland falls back to XCursor when no
+-- HYPRCURSOR theme is set; XCURSOR also covers GTK/XWayland applications.
+hl.env("XCURSOR_THEME", "Chie-Cursor")
+hl.env("XCURSOR_SIZE", "24")
 
 -- ---------------------------------------------------------
 -- Input
@@ -53,8 +58,16 @@ hl.config({
         },
     },
 
+    animations = {
+        enabled = false,
+    },
+
     decoration = {
         rounding = 10,
+
+        shadow = {
+            enabled = false,
+        },
 
         blur = {
             enabled = true,
@@ -206,14 +219,41 @@ hl.bind(
     { locked = true }
 )
 
--- Kitty: floating terminal window
-hl.window_rule({
-    match = {
-        class = "@TERMINAL_CLASS@"
-    },
+-- Media keys
+hl.bind(
+    "XF86AudioPlay",
+    hl.dsp.exec_cmd("playerctl play-pause"),
+    { locked = true }
+)
 
-    float = true,
-    center = true,
-    size = { 1050, 700 },
-    rounding = 14
-})
+hl.bind(
+    "XF86AudioNext",
+    hl.dsp.exec_cmd("playerctl next"),
+    { locked = true }
+)
+
+hl.bind(
+    "XF86AudioPrev",
+    hl.dsp.exec_cmd("playerctl previous"),
+    { locked = true }
+)
+
+hl.bind(
+    "XF86AudioStop",
+    hl.dsp.exec_cmd("playerctl stop"),
+    { locked = true }
+)
+
+-- Brightness keys. On desktops without a backlight brightnessctl simply
+-- has nothing useful to control.
+hl.bind(
+    "XF86MonBrightnessUp",
+    hl.dsp.exec_cmd("brightnessctl set +5%"),
+    { repeating = true, locked = true }
+)
+
+hl.bind(
+    "XF86MonBrightnessDown",
+    hl.dsp.exec_cmd("brightnessctl set 5%-"),
+    { repeating = true, locked = true }
+)

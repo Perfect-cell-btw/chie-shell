@@ -140,6 +140,11 @@ REQUIRED_PACKAGES=(
     imagemagick
     jq
     libnotify
+    brightnessctl
+    hyprshutdown
+    noto-fonts
+    ttf-jetbrains-mono-nerd
+    papirus-icon-theme
     zsh
     kitty
 )
@@ -190,6 +195,29 @@ if (( ${#MISSING_PACKAGES[@]} > 0 )); then
 else
     echo
     echo "✓ Required packages installed"
+fi
+
+# ---------------------------------------------------------
+# Hyprland version
+# ---------------------------------------------------------
+
+HYPRLAND_MIN_VERSION="0.56.0"
+
+if pacman -Q hyprland >/dev/null 2>&1; then
+    HYPRLAND_VERSION="$(
+        pacman -Q hyprland |
+            awk '{print $2}' |
+            sed -E 's/^[0-9]+://; s/-[0-9]+$//'
+    )"
+
+    if ! printf '%s\n%s\n' "$HYPRLAND_MIN_VERSION" "$HYPRLAND_VERSION" | sort -V -C; then
+        echo
+        echo "Hyprland $HYPRLAND_MIN_VERSION or newer is required."
+        echo "Installed: $HYPRLAND_VERSION"
+        exit 1
+    fi
+
+    echo "Hyprland: $HYPRLAND_VERSION"
 fi
 
 # ---------------------------------------------------------
@@ -250,7 +278,25 @@ echo "Files:    $FILE_MANAGER"
 # ---------------------------------------------------------
 
 STAGE="$(mktemp -d -t chie-shell-XXXXXX)"
-trap 'rm -rf "$STAGE"' EXIT
+BACKUP=""
+INSTALL_STARTED=false
+INSTALL_COMMITTED=false
+CURSOR_NAME="Chie-Cursor"
+
+on_exit() {
+    status=$?
+    trap - EXIT
+    set +e
+
+    if declare -F rollback_install >/dev/null 2>&1; then
+        rollback_install "$status"
+    fi
+
+    rm -rf "$STAGE"
+    exit "$status"
+}
+
+trap on_exit EXIT
 
 mkdir -p "$STAGE/home"
 
@@ -335,6 +381,8 @@ CONFIG_DIRS=(
     gtk-4.0
 )
 
+INSTALL_STARTED=true
+
 echo
 echo "Backing up existing configuration..."
 
@@ -356,16 +404,31 @@ for name in .zshrc .gtkrc-2.0; do
     fi
 done
 
+CURSOR_ITEMS=(
+    ".local/share/icons/$CURSOR_NAME"
+    ".icons/$CURSOR_NAME"
+    ".local/share/icons/default/index.theme"
+    ".icons/default/index.theme"
+)
+
+for item in "${CURSOR_ITEMS[@]}"; do
+    target="$HOME/$item"
+
+    if [[ -e "$target" || -L "$target" ]]; then
+        echo "  $item"
+        mkdir -p "$BACKUP/$(dirname "$item")"
+        mv "$target" "$BACKUP/$item"
+    fi
+done
+
 # ---------------------------------------------------------
 # Automatic rollback
 # ---------------------------------------------------------
 
-INSTALL_COMMITTED=false
-
 rollback_install() {
-    status=$?
+    status="${1:-1}"
 
-    if [[ "$INSTALL_COMMITTED" == true || "$status" -eq 0 ]]; then
+    if [[ "$INSTALL_STARTED" != true || "$INSTALL_COMMITTED" == true || "$status" -eq 0 ]]; then
         return
     fi
 
@@ -391,10 +454,18 @@ rollback_install() {
         mv "$BACKUP/.gtkrc-2.0" "$HOME/.gtkrc-2.0"
     fi
 
+    rm -rf "$HOME/.local/share/icons/$CURSOR_NAME" "$HOME/.icons/$CURSOR_NAME"
+    rm -f "$HOME/.local/share/icons/default/index.theme" "$HOME/.icons/default/index.theme"
+
+    for item in "${CURSOR_ITEMS[@]}"; do
+        if [[ -e "$BACKUP/$item" || -L "$BACKUP/$item" ]]; then
+            mkdir -p "$HOME/$(dirname "$item")"
+            mv "$BACKUP/$item" "$HOME/$item"
+        fi
+    done
+
     echo "✓ Previous configuration restored automatically."
 }
-
-trap rollback_install EXIT
 
 # ---------------------------------------------------------
 # Install
@@ -416,6 +487,50 @@ done
 
 [[ -f "$STAGE/home/.gtkrc-2.0" ]] &&
     cp "$STAGE/home/.gtkrc-2.0" "$HOME/.gtkrc-2.0"
+
+CURSOR_SOURCE="$STAGE/home/.local/share/icons/$CURSOR_NAME"
+
+if [[ -d "$CURSOR_SOURCE/cursors" ]]; then
+    echo "Installing $CURSOR_NAME..."
+
+    mkdir -p \
+        "$HOME/.local/share/icons" \
+        "$HOME/.icons" \
+        "$HOME/.local/share/icons/default" \
+        "$HOME/.icons/default"
+
+    cp -a "$CURSOR_SOURCE" "$HOME/.local/share/icons/$CURSOR_NAME"
+    cp -a "$CURSOR_SOURCE" "$HOME/.icons/$CURSOR_NAME"
+
+    cat > "$HOME/.local/share/icons/default/index.theme" <<EOF
+[Icon Theme]
+Inherits=$CURSOR_NAME
+EOF
+
+    cat > "$HOME/.icons/default/index.theme" <<EOF
+[Icon Theme]
+Inherits=$CURSOR_NAME
+EOF
+
+    if command -v gsettings >/dev/null 2>&1; then
+        gsettings set org.gnome.desktop.interface cursor-theme "$CURSOR_NAME" || true
+        gsettings set org.gnome.desktop.interface cursor-size 24 || true
+    fi
+
+    if command -v flatpak >/dev/null 2>&1; then
+        for app in com.spotify.Client com.valvesoftware.Steam; do
+            if flatpak info "$app" >/dev/null 2>&1; then
+                flatpak override --user \
+                    --filesystem="$HOME/.icons:ro" \
+                    --env=XCURSOR_THEME="$CURSOR_NAME" \
+                    --env=XCURSOR_SIZE=24 \
+                    "$app" || true
+            fi
+        done
+    fi
+else
+    echo "Note: $CURSOR_NAME is not bundled in this checkout; cursor install skipped."
+fi
 
 chmod +x "$HOME/.config/hypr/scripts/"*.sh 2>/dev/null || true
 chmod +x "$HOME/.config/waybar/"*.sh 2>/dev/null || true

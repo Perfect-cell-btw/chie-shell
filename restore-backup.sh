@@ -51,6 +51,10 @@ done
 rm -f "$HOME/.zshrc"
 rm -f "$HOME/.gtkrc-2.0"
 
+CURSOR_NAME="Chie-Cursor"
+rm -rf "$HOME/.local/share/icons/$CURSOR_NAME" "$HOME/.icons/$CURSOR_NAME"
+rm -f "$HOME/.local/share/icons/default/index.theme" "$HOME/.icons/default/index.theme"
+
 echo "Restoring backup..."
 
 if [[ -d "$LATEST/.config" ]]; then

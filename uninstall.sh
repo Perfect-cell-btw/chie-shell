@@ -36,6 +36,19 @@ done
 rm -f "$HOME/.zshrc"
 rm -f "$HOME/.gtkrc-2.0"
 
+CURSOR_NAME="Chie-Cursor"
+rm -rf "$HOME/.local/share/icons/$CURSOR_NAME" "$HOME/.icons/$CURSOR_NAME"
+rm -f "$HOME/.local/share/icons/default/index.theme" "$HOME/.icons/default/index.theme"
+
+if command -v flatpak >/dev/null 2>&1; then
+    for app in com.spotify.Client com.valvesoftware.Steam; do
+        flatpak override --user \
+            --unset-env=XCURSOR_THEME \
+            --unset-env=XCURSOR_SIZE \
+            "$app" >/dev/null 2>&1 || true
+    done
+fi
+
 echo
 echo "Chie Shell configuration removed."
 

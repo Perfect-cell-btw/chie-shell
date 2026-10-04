@@ -22,6 +22,7 @@ Chie Shell uses:
 - xdg-desktop-portal-hyprland
 - Grim + Slurp
 - wl-clipboard
+- Cliphist
 - playerctl
 
 The installer checks required Arch packages and offers to install anything missing.
@@ -133,6 +134,7 @@ On US and most other layouts it uses:
 | `SUPER + W` | Wallpaper picker |
 | `SUPER + L` | Lock screen |
 | `SUPER + SPACE` | Next keyboard layout |
+| `SUPER + SHIFT + V` | Clipboard history (last 5 items) |
 | `SUPER + SHIFT + E` | Power menu |
 | `SUPER + SHIFT + X` | Area screenshot |
 | `SUPER + PRINT` | Full screenshot |
@@ -177,6 +179,18 @@ Open SwayNC with:
 ```text
 SUPER + N
 ```
+
+## Clipboard history
+
+Press:
+
+```text
+SUPER + SHIFT + V
+```
+
+Chie Shell opens a compact Rofi window containing the five most recent text clipboard entries. Selecting an entry copies it back to the active clipboard.
+
+Clipboard history is collected with `wl-paste` and `cliphist` while the Hyprland session is running.
 
 ## Screenshots
 

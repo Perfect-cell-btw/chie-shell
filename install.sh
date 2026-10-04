@@ -135,6 +135,7 @@ REQUIRED_PACKAGES=(
     grim
     slurp
     wl-clipboard
+    cliphist
     pavucontrol
     curl
     imagemagick

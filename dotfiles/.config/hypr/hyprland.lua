@@ -168,8 +168,13 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("waybar")
     hl.exec_cmd("swaync")
     hl.exec_cmd("hypridle")
+    hl.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/clipboard-daemon.sh")
 end)
 hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))
+
+-- Clipboard history: show the latest 5 copied text items.
+hl.bind("SUPER + SHIFT + V",
+    hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/scripts/clipboard-menu.sh"))
 
 -- Chie Shell power menu
 hl.bind("SUPER + SHIFT + E",

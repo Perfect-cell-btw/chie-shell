@@ -1,0 +1,98 @@
+* {
+    bg:        rgba(18, 22, 15, 0.95);
+    glass:     rgba(255, 255, 255, 0.055);
+
+    green:     #a8d84e;
+    yellow:    #eacf52;
+
+    text:      #dde7c7;
+    muted:     #899475;
+
+    background-color: transparent;
+    text-color: @text;
+}
+
+window {
+    width: 760px;
+
+    transparency: "real";
+    background-color: @bg;
+
+    border: 2px;
+    border-color: rgba(234, 207, 82, 0.35);
+
+    border-radius: 20px;
+    padding: 16px;
+}
+
+mainbox {
+    spacing: 12px;
+    background-color: transparent;
+
+    children: [
+        inputbar,
+        listview
+    ];
+}
+
+inputbar {
+    padding: 12px;
+
+    background-color: @glass;
+
+    border: 1px;
+    border-color: rgba(168, 216, 78, 0.30);
+
+    border-radius: 12px;
+    spacing: 10px;
+
+    children: [
+        prompt,
+        entry
+    ];
+}
+
+prompt {
+    text-color: @yellow;
+}
+
+entry {
+    placeholder: "Search last 5 clipboard items...";
+    placeholder-color: @muted;
+
+    text-color: @text;
+}
+
+listview {
+    lines: 5;
+    columns: 1;
+
+    spacing: 6px;
+
+    background-color: transparent;
+    scrollbar: false;
+}
+
+element {
+    padding: 11px 13px;
+
+    background-color: transparent;
+    border-radius: 11px;
+}
+
+element selected {
+    background-color: rgba(168, 216, 78, 0.16);
+
+    border: 1px;
+    border-color: rgba(234, 207, 82, 0.32);
+}
+
+element-text {
+    font: "@UI_FONT@ 12";
+    text-color: @text;
+    vertical-align: 0.5;
+}
+
+element selected element-text {
+    text-color: @yellow;
+}
